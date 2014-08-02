@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
+from datetime import datetime
 
 # helper functions
 def name_to_url(name):
@@ -20,6 +21,9 @@ def scratch(request):
     return render_to_response('rango/scratch.html', {}, context)
 
 def index(request):
+    ## Cookie test
+    #request.session.set_test_cookie()
+    
     # Obtain the context from the HTTP request.
     context = RequestContext(request)
     
@@ -27,19 +31,46 @@ def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
     context_dict = {'categories': category_list}
     
-    # Add top 5 Pages to context
-    page_list = Page.objects.order_by('-views')[:5]
-    context_dict['pages'] = page_list
-    
-    
     # We loop through each category returned, and create a URL attribute.
     # This attribute stores an encoded URL (e.g. spaces replaced with underscores)
     for category in category_list:
         #category.url = category.name.replace(' ', '_')
         category.url = name_to_url(category.name)
     
+    # Add top 5 Pages to context
+    page_list = Page.objects.order_by('-views')[:5]
+    context_dict['pages'] = page_list
+    
+    #### NEW CODE ####
+    # Obtain our Response object early so we can add cookie information
+    response = render_to_response('rango/index.html', context_dict, context)
+    
+    # get the number of visits to the site.
+    # We use the COOKIES.get() function to obtain the visits cookie.
+    # If the cookie exists, the value returned is casted to an integer.
+    # If the cookie doesn't exist, we default to zero and cast that.
+    visits = int(request.COOKIES.get('visits', '0'))
+
+    # Does the cookie last_visit exist?
+    if 'last_visit' in request.COOKIES:
+        # Yes it does! Get the cokies's value.
+        last_visit = request.COOKIES['last_visit']
+        # cast the value to a Python date/time object.
+        last_visit_time = datetime.strptime(last_visit[:-7], "%Y-%m-%d %H:%M:%S")
+
+        # if it's been more than a day since the last visit...
+        if (datetime.now() - last_visit_time).days > 0:
+            # ...reassign the value of the cookie to +1 of what it was before...
+            response.set_cookie('visits', visits+1)
+            # ...and update the last visit cookie, too.
+            response.set_cookie('last_visit', datetime.now())
+    else:
+        # Cookie last_visit doesn't exist, so create it to the current date/time.
+        response.set_cookie('last_visit', datetime.now())
+        #response.set_cookie('visits', visits)
+    
     # Render the response and send it back!
-    return render_to_response('rango/index.html', context_dict, context)
+    return response #render_to_response('rango/index.html', context_dict, context)
 
 def about(request):
     context = RequestContext(request)
@@ -83,7 +114,7 @@ def category(request, category_name_url):
         # Don't do anything - the template displays the "no category" message for us.
         pass
 
-    # Go render the resonse and return it to thee client.
+    # Go render the response and return it to thee client.
     return render_to_response('rango/category.html', context_dict, context)
 
 @login_required
@@ -156,6 +187,11 @@ def add_page(request, category_name_url):
              context)
 
 def register(request):
+    ## Cookie Test
+    #if request.session.test_cookie_worked():
+    #    print ">>>>> TEST COOKIE WORKED!"
+    #    request.session.delete_test_cookie()
+        
     # Like before, get the request's context.
     context = RequestContext(request)
 
