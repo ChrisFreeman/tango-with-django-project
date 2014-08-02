@@ -6,14 +6,18 @@ from django.http import HttpResponseRedirect, HttpResponse
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 
-# Create your views here.
-
 # helper functions
 def name_to_url(name):
     return name.replace(' ', '_')
 
 def decode_url(url):
     return url.replace('_', ' ')
+
+# Create your views here.
+
+def scratch(request):
+    context = RequestContext(request)
+    return render_to_response('rango/scratch.html', {}, context)
 
 def index(request):
     # Obtain the context from the HTTP request.
@@ -264,4 +268,5 @@ def user_logout(request):
         
 @login_required
 def restricted(request):
-    return HttpResponse("Since you're logged in, you can see this text!")
+    context = RequestContext(request)
+    return render_to_response('rango/restricted.html', {}, context)

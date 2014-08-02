@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Rango</title>
-  </head>
+{% extends "rango/base.html" %}
+
+{% block title %}Index{% endblock %}
   
-  <body>
+{% block body_block %}
     {% if user.is_authenticated %}
     <h1>Rango says... hello {{ user.username }}!</h1>
     {% else %}
@@ -28,22 +26,10 @@
       <ul>
         {# We haven't added CSS styling yet. Using HTML span to add a bit of flair #}
         {% for page in pages %}
-          <li>{{ page.title }} - {{ page.url }} - likes: <span style='color:gold;'>&starf;</span> {{ page.views }} </li>
+          <li>{{ page.title }} - <a href="{{ page.url }}">{{ page.url }}</a> - likes: <span style='color:gold;'>&starf;</span> {{ page.views }} </li>
         {% endfor %}
       </ul>
     {% else %}
       <p> No pages with views</p>
     {% endif %}
-    {% if user.is_authenticated %}
-      <a href="/rango/add_category/">Add a New Category</a><br />
-      <a href="/rango/restricted/">Restricted Page</a><br />
-      <a href="/rango/logout/">Logout</a><br />
-    {% else %}
-      <a href="/rango/register/">Register Here</a><br />
-      <a href="/rango/login/">Login</a><br />
-    {% endif %}
-
-    <a href="/rango/about/">About</a><br />
-
-  </body>
-</html>
+{% endblock %}
