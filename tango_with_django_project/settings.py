@@ -102,3 +102,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media') # Absolute path to the media directory
 
 LOGIN_URL = '/rango/login/'
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# SESSION_COOKIE_AGE used for persistant session data (SESSION_EXPIRE_AT_BROWSER_CLOSE is False)
+# SESSION_COOKIE_AGE = 1209600
