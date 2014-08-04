@@ -3,33 +3,40 @@
 {% block title %}Index{% endblock %}
   
 {% block body_block %}
-    {% if user.is_authenticated %}
-    <h1>Rango says... hello {{ user.username }}!</h1>
-    {% else %}
-    <h1>Rango says... hello world!</h1>
-    {% endif %}    
+<div class="hero-unit">
+    <h1>Ready to Rango</h1>
+    <p>Find, Add, Share and Rango useful links and resources.</p>
+</div>
 
-    <h2>Categories</h2>
+<div class="row-fluid">
+  <div class="span6">
+    <h2>Top Five Categories</h2>
     {% if categories %}
       <ul>
         {% for category in categories %}
-          <!-- Following line changed to add an HTML hyperlink -->
           <li><a href="/rango/category/{{ category.url }}/"> {{ category.name }}</a></li>
         {% endfor %}
       </ul>
     {% else %}
       <strong>There are no categories present.</strong>
     {% endif %}
-    
-    <h2>Pages</h2>
+  </div>    
+  <!--/span-->  
+  
+  <div class="span6">
+    <h2>Top Five Pages</h2>
     {% if pages %}
       <ul>
-        {# We haven't added CSS styling yet. Using HTML span to add a bit of flair #}
         {% for page in pages %}
-          <li>{{ page.title }} - <a href="{{ page.url }}">{{ page.url }}</a> - likes: <span style='color:gold;'>&starf;</span> {{ page.views }} </li>
+          <li><a href="{{ page.url }}">{{ page.title }}</a> - {{ page.category }} ({{ page.views }} views(s) </li>
         {% endfor %}
       </ul>
     {% else %}
-      <p> No pages with views</p>
+      <strong> No pages at present.</strong>
     {% endif %}
+  </div>
+  <!--/span-->
+</div>
+<!--/row-->
 {% endblock %}
+  

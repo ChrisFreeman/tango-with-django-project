@@ -49,6 +49,8 @@ Use git tag to see a list of tags:
     v7.3
     v8.8
     v9.4
+    v10.9
+    v11.5
 
 Use git checkout to see the code as it was at the end of a specific chapter.  For example, to see the code at the end of Chapter 4, type:
 

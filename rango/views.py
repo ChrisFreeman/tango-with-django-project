@@ -275,7 +275,7 @@ def user_login(request):
         else:
             # Bad login details were provided. So we can't log the user in.
             print "Invalid login details: {0}, {1}".format(username, password)
-            context_dict = {'bad_input': "Invalid login details supplied."}
+            context_dict = {'bad_details': "Invalid login details supplied."}
             return render_to_response('rango/login.html', context_dict, context)
 
 
