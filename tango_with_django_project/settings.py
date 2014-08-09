@@ -29,7 +29,16 @@ TEMPLATE_DIRS = (
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'NotSoSecretKey-ItIsOnGitHubAsYouCanSee'
+
+#SECRET_KEY = 'NotSoSecretKey-ItIsOnGitHubAsYouCanSee'
+# Import KEYS not part of the repository
+# Get SECRET_KEY
+try:
+    from keys import SECRET_KEY
+except Exception, e:
+    print "Error: ", e  # module not found
+    exit()
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
